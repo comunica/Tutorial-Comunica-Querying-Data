@@ -17,7 +17,7 @@ const sources = [ { type: 'hypermedia', value: 'http://fragments.dbpedia.org/201
 app.get('/', (req, res) => {
     const city = req.query.city;
     // A real solution would take query injection into account!
-    let query = queryTemplate.replace('%CITY%', city ? `?s dbpedia-owl:birthPlace <${city}>.` : '');
+    let query = queryTemplate.replace('%CITY%', city ? `?s dbpedia-owl:birthPlace [ rdfs:label "${city}"@en ].` : '');
     newEngineDynamic().then(function (myEngine) {
         myEngine.query(query, { sources: sources })
             .then((result) => {
