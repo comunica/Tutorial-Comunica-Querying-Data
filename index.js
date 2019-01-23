@@ -4,6 +4,8 @@ const newEngineDynamic = require('@comunica/actor-init-sparql').newEngineDynamic
 const app = express();
 const port = 3000;
 
+app.use(express.static('public'));
+
 const queryTemplate = `
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 PREFIX dc: <http://purl.org/dc/terms/>
@@ -36,10 +38,23 @@ app.get('/', (req, res) => {
         myEngine.query(query, { sources: sources.slice() })
             .then((result) => {
 
-                res.set('content-type', 'text/plain; charset=utf-8');
+                res.set('content-type', 'text/html; charset=utf-8');
 
-                result.bindingsStream.on('data', data => res.write(`${data.get('?name').value}: ${data.get('?title').value}\n`) );
-                result.bindingsStream.on('end', () => res.end());
+                res.write(`
+                    <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+                    <html>
+                    <head>
+                        <title>Belgian writers${city ? ' from ' + city : ''}</title>
+                        <link rel="stylesheet" href="style.css">
+                    </head>
+                    <body>
+                    <ul>
+                `);
+
+                result.bindingsStream.on('data', data => res.write(`
+                    <li><h3>${data.get('?title').value}</h3> <p>${data.get('?name').value}</p></li>
+                    `) );
+                result.bindingsStream.on('end', () => res.end('</ul></body></html>'));
 
             });
     });
