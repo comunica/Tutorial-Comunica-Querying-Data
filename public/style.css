@@ -17,6 +17,11 @@ h3 {
 li img {
     float: left;
     margin: 0 15px 0 0;
+
+    max-width: 100px;
+    max-height: 100px;
+    height: auto;
+    width:auto;
 }
 
 li p {
