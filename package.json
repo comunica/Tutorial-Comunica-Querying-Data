@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/comunica/Tutorial-Comunica-Web-Service#readme",
   "dependencies": {
+    "@comunica/actor-init-sparql": "^1.6.3",
     "express": "^4.16.4"
   },
   "license": "MIT"
