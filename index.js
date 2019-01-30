@@ -14,7 +14,7 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX schema: <http://schema.org/>
 
-SELECT ?name ?title ?thumbnail
+SELECT ?name ?title ?thumbnail ?publisher
 { 
     ?person dbpedia-owl:birthPlace <http://dbpedia.org/resource/Belgium>.
     %CITY%
@@ -22,7 +22,8 @@ SELECT ?name ?title ?thumbnail
     ?viafID schema:sameAs ?person;
             schema:name ?name.
     ?book dc:contributor [ foaf:name ?name ];
-          dc:title ?title.
+          dc:title ?title;
+          dc:publisher ?publisher.
     
     ?person dbpedia-owl:thumbnail ?thumbnail.
 }
@@ -55,7 +56,8 @@ app.get('/', (req, res) => {
             res.write('<li>');
             res.write(`<img src="${data.get('?thumbnail').value}" />`);
             res.write(`<h3>${data.get('?title').value}</h3>`);
-            res.write(`<p>${data.get('?name').value}</p>`);
+            res.write(`<emph>Author: ${data.get('?name').value}</emph>`);
+            res.write(`<p>Publisher: ${data.get('?publisher').value}</p>`);
             res.write('</li>');
         } );
         result.bindingsStream.on('end', () => res.end('</ul></body></html>'));
