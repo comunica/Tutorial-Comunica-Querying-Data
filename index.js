@@ -14,7 +14,6 @@ SELECT ?name
     ?person dbpedia-owl:birthPlace <http://dbpedia.org/resource/Belgium>;
             foaf:name ?name.
 }
-LIMIT 5
 `;
 const sources = [
     { type: 'hypermedia', value: 'https://fragments.dbpedia.org/2016-04/en' }
@@ -22,9 +21,10 @@ const sources = [
 
 app.get('/', (req, res) => {
     engine.query(query, { sources: sources }).then(result => {
-        const bindings = [];
-        result.bindingsStream.on('data', data => bindings.push(data.get('?name').value));
-        result.bindingsStream.on('end', () => res.send(bindings));
+        res.set('content-type', 'text/plain; charset=utf-8');
+
+        result.bindingsStream.on('data', data => res.write(data.get('?name').value + '\n'));
+        result.bindingsStream.on('end', () => res.end());
     });
 });
 
