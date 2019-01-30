@@ -1,0 +1,23 @@
+{
+  "name": "tutorial-comunica-web-service",
+  "private": true,
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/comunica/Tutorial-Comunica-Web-Service.git"
+  },
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/comunica/Tutorial-Comunica-Web-Service/issues"
+  },
+  "homepage": "https://github.com/comunica/Tutorial-Comunica-Web-Service#readme",
+  "dependencies": {
+    "express": "^4.16.4"
+  },
+  "license": "MIT"
+}
