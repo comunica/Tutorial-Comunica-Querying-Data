@@ -19,5 +19,6 @@
   "dependencies": {
     "@comunica/actor-init-sparql": "^1.5.2",
     "express": "^4.16.4"
-  }
+  },
+  "license": "MIT"
 }
