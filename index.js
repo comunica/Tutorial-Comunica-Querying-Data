@@ -7,19 +7,25 @@ const engine = newEngine();
 
 const queryTemplate = `
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
+PREFIX dc: <http://purl.org/dc/terms/>
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-
-SELECT ?name
+PREFIX schema: <http://schema.org/>
+SELECT ?name ?title
 { 
-    ?person dbpedia-owl:birthPlace <http://dbpedia.org/resource/Belgium>;
-            foaf:name ?name.
-    
+    ?person dbpedia-owl:birthPlace <http://dbpedia.org/resource/Belgium>.
     %CITY%
+    
+    ?viafID schema:sameAs ?person;
+            schema:name ?name.
+    ?book dc:contributor [ foaf:name ?name ];
+          dc:title ?title.
 }
 `;
 const sources = [
-    { type: 'hypermedia', value: 'https://fragments.dbpedia.org/2016-04/en' }
+    { type: 'hypermedia', value: 'https://fragments.dbpedia.org/2016-04/en' },
+    { type: 'hypermedia', value: 'http://data.linkeddatafragments.org/viaf' },
+    { type: 'hypermedia', value: 'http://data.linkeddatafragments.org/harvard' }
 ];
 
 function cleanInput(str) {
@@ -34,8 +40,8 @@ app.get('/', (req, res) => {
     let query = queryTemplate.replace('%CITY%', city ? `?person dbpedia-owl:birthPlace [ rdfs:label "${city}"@en ].` : '');
     engine.query(query, { sources: sources }).then(result => {
         res.set('content-type', 'text/plain; charset=utf-8');
+        result.bindingsStream.on('data', data => res.write(`${data.get('?name').value}: ${data.get('?title').value}\n`) );
 
-        result.bindingsStream.on('data', data => res.write(data.get('?name').value + '\n'));
         result.bindingsStream.on('end', () => res.end());
     });
 });
