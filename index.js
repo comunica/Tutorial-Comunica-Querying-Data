@@ -5,6 +5,8 @@ const app = express();
 const port = 3000;
 const engine = newEngine();
 
+app.use(express.static('public'));
+
 const queryTemplate = `
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 PREFIX dc: <http://purl.org/dc/terms/>
@@ -39,10 +41,26 @@ app.get('/', (req, res) => {
     const city = cleanInput(req.query.city);
     let query = queryTemplate.replace('%CITY%', city ? `?person dbpedia-owl:birthPlace [ rdfs:label "${city}"@en ].` : '');
     engine.query(query, { sources: sources }).then(result => {
-        res.set('content-type', 'text/plain; charset=utf-8');
-        result.bindingsStream.on('data', data => res.write(`${data.get('?name').value}: ${data.get('?title').value}\n`) );
+        res.set('content-type', 'text/html; charset=utf-8');
 
-        result.bindingsStream.on('end', () => res.end());
+        res.write(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Belgian writers${city ? ' from ' + city : ''}</title>
+                <link rel="stylesheet" href="style.css">
+            </head>
+            <body>
+            <ul>
+        `);
+
+        result.bindingsStream.on('data', data => {
+            res.write('<li>');
+            res.write(`<strong>${data.get('?title').value}</strong><br/>`);
+            res.write(`<em>Author: ${data.get('?name').value}</em>`);
+            res.write('</li>');
+        });
+        result.bindingsStream.on('end', () => res.end('</ul></body></html>'));
     });
 });
 
