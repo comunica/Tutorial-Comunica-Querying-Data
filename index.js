@@ -13,7 +13,7 @@ PREFIX dc: <http://purl.org/dc/terms/>
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX schema: <http://schema.org/>
-SELECT ?name ?title
+SELECT ?name ?title ?publisher ?thumbnail
 { 
     ?person dbpedia-owl:birthPlace <http://dbpedia.org/resource/Belgium>.
     %CITY%
@@ -21,7 +21,10 @@ SELECT ?name ?title
     ?viafID schema:sameAs ?person;
             schema:name ?name.
     ?book dc:contributor [ foaf:name ?name ];
-          dc:title ?title.
+          dc:title ?title;
+          dc:publisher ?publisher.
+  
+    ?person dbpedia-owl:thumbnail ?thumbnail.
 }
 `;
 const sources = [
@@ -56,8 +59,10 @@ app.get('/', (req, res) => {
 
         result.bindingsStream.on('data', data => {
             res.write('<li>');
+            res.write(`<img alt="thumbnail" src="${data.get('?thumbnail').value}" />`);
             res.write(`<strong>${data.get('?title').value}</strong><br/>`);
-            res.write(`<em>Author: ${data.get('?name').value}</em>`);
+            res.write(`<em>Author: ${data.get('?name').value}</em><br/>`);
+            res.write(`<span>Publisher: ${data.get('?publisher').value}</span>`);
             res.write('</li>');
         });
         result.bindingsStream.on('end', () => res.end('</ul></body></html>'));
