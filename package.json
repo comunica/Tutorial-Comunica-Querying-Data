@@ -1,0 +1,27 @@
+{
+  "name": "tutorial-comunica-web-service",
+  "private": true,
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/comunica/Tutorial-Comunica-Web-Service.git"
+  },
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/comunica/Tutorial-Comunica-Web-Service/issues"
+  },
+  "homepage": "https://github.com/comunica/Tutorial-Comunica-Web-Service#readme",
+  "dependencies": {
+    "@comunica/actor-init-sparql": "^1.7.2",
+    "express": "^4.16.4"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "comunica-sparql": "node_modules/.bin/comunica-sparql",
+    "comunica-sparql-http": "node_modules/.bin/comunica-sparql-http",
+    "comunica-dynamic-sparql": "node_modules/.bin/comunica-dynamic-sparql"
+  },
+  "license": "MIT"
+}
