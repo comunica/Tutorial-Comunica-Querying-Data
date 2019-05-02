@@ -15,6 +15,7 @@
   "homepage": "https://github.com/comunica/Tutorial-Comunica-Web-Service#readme",
   "dependencies": {
     "@comunica/actor-init-sparql": "^1.7.2",
+    "cors": "^2.8.5",
     "express": "^4.16.4",
     "http-server": "^0.11.1"
   },

@@ -1,9 +1,12 @@
 const express = require('express');
+const cors = require('cors');
 const newEngine = require('@comunica/actor-init-sparql').newEngine;
 
 const app = express();
 const port = 4000;
 const engine = newEngine();
+
+app.use(cors());
 
 app.get('/', (req, res) => {
     handleData().then(result => {
